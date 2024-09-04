@@ -1,46 +1,159 @@
-import { useState } from "react";
+import FormField from "./FormField";
 
-const UserTable = ({ users }) => {
-  const [sortConfig, setSortConfig] = useState({
-    key: "username",
-    direction: "ascending",
-  });
-
-  const sortedUsers = [...users].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  const requestSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-  };
-
+const UserTable = ({
+  users,
+  editingUserId,
+  onEditClick,
+  onInputChange,
+  onSaveClick,
+  onDeleteClick,
+  editedUserData,
+  errors,
+  register,
+  onSort,
+  sortConfig,
+}) => {
   return (
-    <table>
+    <table className="min-w-full bg-white border mt-6">
       <thead>
         <tr>
-          <th onClick={() => requestSort("username")}>username</th>
-          <th onClick={() => requestSort("email")}>email</th>
-          <th onClick={() => requestSort("nickname")}>nickname</th>
-          <th onClick={() => requestSort("gender")}>gender</th>
+          <th className="px-4 py-2 text-left font-medium text-gray-600">
+            Select
+          </th>
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("username")}
+          >
+            Username{" "}
+            {sortConfig.key === "username"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
+          </th>
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("email")}
+          >
+            Email{" "}
+            {sortConfig.key === "email"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
+          </th>
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("nickname")}
+          >
+            Nickname{" "}
+            {sortConfig.key === "nickname"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
+          </th>
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("gender")}
+          >
+            Gender{" "}
+            {sortConfig.key === "gender"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
+          </th>
         </tr>
       </thead>
-      <tbody>
-        {sortedUsers.map((user, index) => (
-          <tr key={index}>
-            <td>{user.username}</td>
-            <td>{user.email}</td>
-            <td>{user.nickname}</td>
-            <td>{user.gender}</td>
+      <tbody className="bg-white divide-y divide-gray-200">
+        {users.map((user) => (
+          <tr key={user.email}>
+            <td className="px-4 py-2">
+              <input
+                type="checkbox"
+                checked={editingUserId === user.email}
+                onChange={() => onEditClick(user)}
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+              />
+            </td>
+            {editingUserId === user.email ? (
+              <>
+                <td className="px-4 py-2">
+                  <FormField
+                    id="username"
+                    type="text"
+                    register={register}
+                    required
+                    errors={errors}
+                    value={editedUserData.username}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td className="px-4 py-2">
+                  <FormField
+                    id="email"
+                    type="email"
+                    register={register}
+                    required
+                    errors={errors}
+                    value={editedUserData.email}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td className="px-4 py-2">
+                  <FormField
+                    id="nickname"
+                    type="text"
+                    register={register}
+                    required
+                    errors={errors}
+                    value={editedUserData.nickname}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td className="px-4 py-2">
+                  <FormField
+                    id="gender"
+                    type="select"
+                    register={register}
+                    required
+                    errors={errors}
+                    options={[
+                      { value: "male", label: "Male" },
+                      { value: "female", label: "Female" },
+                    ]}
+                    value={editedUserData.gender}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td className="px-4 py-2 flex space-x-2">
+                  <button
+                    onClick={onSaveClick}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={onDeleteClick}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </>
+            ) : (
+              <>
+                <td className="px-4 py-2">{user.username}</td>
+                <td className="px-4 py-2">{user.email}</td>
+                <td className="px-4 py-2">{user.nickname}</td>
+                <td className="px-4 py-2">{user.gender}</td>
+              </>
+            )}
           </tr>
         ))}
       </tbody>
