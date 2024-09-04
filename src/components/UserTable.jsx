@@ -1,46 +1,115 @@
-import { useState } from "react";
+import FormField from "./FormField";
 
-const UserTable = ({ users }) => {
-  const [sortConfig, setSortConfig] = useState({
-    key: "username",
-    direction: "ascending",
-  });
-
-  const sortedUsers = [...users].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  const requestSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-  };
-
+const UserTable = ({
+  users,
+  editingUserId,
+  onEditClick,
+  onInputChange,
+  onSaveClick,
+  onDeleteClick,
+  editedUserData,
+  errors,
+  register,
+}) => {
   return (
     <table>
       <thead>
         <tr>
-          <th onClick={() => requestSort("username")}>username</th>
-          <th onClick={() => requestSort("email")}>email</th>
-          <th onClick={() => requestSort("nickname")}>nickname</th>
-          <th onClick={() => requestSort("gender")}>gender</th>
+          <th></th>
+          <th>username</th>
+          <th>email</th>
+          <th>nickname</th>
+          <th>gender</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        {sortedUsers.map((user, index) => (
-          <tr key={index}>
-            <td>{user.username}</td>
-            <td>{user.email}</td>
-            <td>{user.nickname}</td>
-            <td>{user.gender}</td>
+        {users.map((user) => (
+          <tr key={user.email}>
+            <td>
+              <input
+                type="checkbox"
+                checked={editingUserId === user.email}
+                onChange={() => onEditClick(user)}
+              />
+            </td>
+            {editingUserId === user.email ? (
+              <>
+                <td>
+                  <FormField
+                    id="username"
+                    type="text"
+                    register={register}
+                    required
+                    errors={errors}
+                    value={editedUserData.username}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td>
+                  <FormField
+                    id="email"
+                    type="email"
+                    register={register}
+                    required
+                    errors={errors}
+                    value={editedUserData.email}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td>
+                  <FormField
+                    id="nickname"
+                    type="text"
+                    register={register}
+                    required
+                    errors={errors}
+                    value={editedUserData.nickname}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td>
+                  <FormField
+                    id="gender"
+                    type="select"
+                    register={register}
+                    required
+                    errors={errors}
+                    options={[
+                      { value: "male", label: "Male" },
+                      { value: "female", label: "Female" },
+                    ]}
+                    value={editedUserData.gender}
+                    onChange={onInputChange}
+                    hideLabel={true}
+                  />
+                </td>
+                <td>
+                  <button
+                    onClick={onSaveClick}
+                    className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={onDeleteClick}
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </>
+            ) : (
+              <>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.nickname}</td>
+                <td>{user.gender}</td>
+              </>
+            )}
           </tr>
         ))}
       </tbody>
