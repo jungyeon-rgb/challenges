@@ -10,6 +10,7 @@ const AddUserForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -24,6 +25,7 @@ const AddUserForm = () => {
     }
 
     addUser(data);
+    reset();
   };
 
   return (
