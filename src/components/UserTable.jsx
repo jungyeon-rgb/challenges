@@ -10,6 +10,8 @@ const UserTable = ({
   editedUserData,
   errors,
   register,
+  onSort,
+  sortConfig,
 }) => {
   return (
     <table className="min-w-full bg-white border mt-6">
@@ -18,17 +20,49 @@ const UserTable = ({
           <th className="px-4 py-2 text-left font-medium text-gray-600">
             Select
           </th>
-          <th className="px-4 py-2 text-left font-medium text-gray-600">
-            Username
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("username")}
+          >
+            Username{" "}
+            {sortConfig.key === "username"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
           </th>
-          <th className="px-4 py-2 text-left font-medium text-gray-600">
-            Email
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("email")}
+          >
+            Email{" "}
+            {sortConfig.key === "email"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
           </th>
-          <th className="px-4 py-2 text-left font-medium text-gray-600">
-            Nickname
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("nickname")}
+          >
+            Nickname{" "}
+            {sortConfig.key === "nickname"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
           </th>
-          <th className="px-4 py-2 text-left font-medium text-gray-600">
-            Gender
+          <th
+            className="px-4 py-2 text-left font-medium text-gray-600 cursor-pointer"
+            onClick={() => onSort("gender")}
+          >
+            Gender{" "}
+            {sortConfig.key === "gender"
+              ? sortConfig.direction === "ascending"
+                ? "↑"
+                : "↓"
+              : ""}
           </th>
         </tr>
       </thead>

@@ -25,10 +25,10 @@ const useUserStore = create((set) => ({
     set((state) => ({
       users: [...state.users, newUser],
     })),
-  updateUser: (updatedUser) =>
+  updateUser: (updatedUser, originalEmail) =>
     set((state) => ({
       users: state.users.map((user) =>
-        user.email === updatedUser.email ? updatedUser : user
+        user.email === originalEmail ? updatedUser : user
       ),
     })),
   deleteUser: (email) =>

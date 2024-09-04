@@ -9,6 +9,11 @@ const UserList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUserData, setEditedUserData] = useState({});
+  const [originalEmail, setOriginalEmail] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: "username",
+    direction: "ascending",
+  });
 
   const {
     register,
@@ -19,7 +24,25 @@ const UserList = () => {
     mode: "onChange",
   });
 
-  const filteredUsers = users.filter((user) =>
+  const handleSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedUsers = [...users].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? 1 : -1;
+    }
+    return 0;
+  });
+
+  const filteredUsers = sortedUsers.filter((user) =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -29,6 +52,7 @@ const UserList = () => {
       setEditedUserData({});
     } else {
       setEditingUserId(user.email);
+      setOriginalEmail(user.email);
       setEditedUserData(user);
       Object.keys(user).forEach((key) => setValue(key, user[key]));
     }
@@ -42,7 +66,7 @@ const UserList = () => {
   const handleSaveClick = handleSubmit(() => {
     const isEmailTaken = users.some(
       (user) =>
-        user.email === editedUserData.email && user.email !== editingUserId
+        user.email === editedUserData.email && user.email !== originalEmail
     );
 
     if (isEmailTaken) {
@@ -51,7 +75,7 @@ const UserList = () => {
     }
 
     if (Object.keys(errors).length === 0) {
-      updateUser(editedUserData);
+      updateUser(editedUserData, originalEmail);
       setEditingUserId(null);
     }
   });
@@ -75,6 +99,8 @@ const UserList = () => {
         editedUserData={editedUserData}
         errors={errors}
         register={register}
+        onSort={handleSort}
+        sortConfig={sortConfig}
       />
     </div>
   );
