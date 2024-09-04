@@ -4,14 +4,13 @@ const UserTable = ({
   users,
   editingUserId,
   onEditClick,
-  onInputChange,
   onSaveClick,
   onDeleteClick,
-  editedUserData,
   errors,
   register,
   onSort,
   sortConfig,
+  isValid,
 }) => {
   return (
     <table className="min-w-full bg-white border mt-6">
@@ -85,9 +84,21 @@ const UserTable = ({
                     type="text"
                     register={register}
                     required
+                    validation={{
+                      minLength: {
+                        value: 3,
+                        message: "최소 3자 이상 입력하세요.",
+                      },
+                      maxLength: {
+                        value: 15,
+                        message: "최대 15자까지만 입력하세요.",
+                      },
+                      pattern: {
+                        value: /^[가-힣a-zA-Z\s\d]{3,15}$/,
+                        message: "유효하지 않은 형식입니다.",
+                      },
+                    }}
                     errors={errors}
-                    value={editedUserData.username}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
@@ -97,9 +108,13 @@ const UserTable = ({
                     type="email"
                     register={register}
                     required
+                    validation={{
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "유효하지 않은 이메일 형식입니다.",
+                      },
+                    }}
                     errors={errors}
-                    value={editedUserData.email}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
@@ -109,9 +124,21 @@ const UserTable = ({
                     type="text"
                     register={register}
                     required
+                    validation={{
+                      minLength: {
+                        value: 3,
+                        message: "최소 3자 이상 입력하세요.",
+                      },
+                      maxLength: {
+                        value: 15,
+                        message: "최대 15자까지만 입력하세요.",
+                      },
+                      pattern: {
+                        value: /^[가-힣a-zA-Z\s\d]{3,15}$/,
+                        message: "유효하지 않은 형식입니다.",
+                      },
+                    }}
                     errors={errors}
-                    value={editedUserData.nickname}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
@@ -126,15 +153,18 @@ const UserTable = ({
                       { value: "male", label: "Male" },
                       { value: "female", label: "Female" },
                     ]}
-                    value={editedUserData.gender}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
                 <td className="px-4 py-2 flex space-x-2">
                   <button
                     onClick={onSaveClick}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                    className={`w-24 py-2 px-4 rounded focus:outline-none font-bold transition duration-300 ${
+                      isValid
+                        ? "bg-blue-500 hover:bg-blue-700 focus:bg-blue-600 text-white cursor-pointer"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
+                    disabled={!isValid}
                   >
                     Save
                   </button>

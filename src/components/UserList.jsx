@@ -3,23 +3,31 @@ import useUserStore from "../store/userStore";
 import UserTable from "./UserTable";
 import Search from "./Search";
 import { useForm } from "react-hook-form";
+import Pagination from "./Pagination";
 
 const UserList = () => {
-  const { users, updateUser, deleteUser } = useUserStore();
+  const { users, updateUser, deleteUser } = useUserStore((state) => ({
+    users: state.users,
+    updateUser: state.updateUser,
+    deleteUser: state.deleteUser,
+  }));
+
   const [searchTerm, setSearchTerm] = useState("");
   const [editingUserId, setEditingUserId] = useState(null);
-  const [editedUserData, setEditedUserData] = useState({});
-  const [originalEmail, setOriginalEmail] = useState("");
   const [sortConfig, setSortConfig] = useState({
     key: "username",
     direction: "ascending",
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
+
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
+    reset,
   } = useForm({
     mode: "onChange",
   });
@@ -46,27 +54,32 @@ const UserList = () => {
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // 페이지네이션 관련 로직
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const handleEditClick = (user) => {
     if (editingUserId === user.email) {
       setEditingUserId(null);
-      setEditedUserData({});
+      reset(); // reset the form when cancelling edit
     } else {
       setEditingUserId(user.email);
-      setOriginalEmail(user.email);
-      setEditedUserData(user);
       Object.keys(user).forEach((key) => setValue(key, user[key]));
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedUserData({ ...editedUserData, [name]: value });
-  };
+  const handleSaveClick = handleSubmit((data) => {
+    // 유효성 검사 통과 확인
+    if (!isValid) {
+      return;
+    }
 
-  const handleSaveClick = handleSubmit(() => {
+    // 이메일 중복 체크
     const isEmailTaken = users.some(
-      (user) =>
-        user.email === editedUserData.email && user.email !== originalEmail
+      (user) => user.email === data.email && user.email !== editingUserId
     );
 
     if (isEmailTaken) {
@@ -74,10 +87,9 @@ const UserList = () => {
       return;
     }
 
-    if (Object.keys(errors).length === 0) {
-      updateUser(editedUserData, originalEmail);
-      setEditingUserId(null);
-    }
+    // 유효성 검사 통과 후 데이터 업데이트
+    updateUser(data, editingUserId);
+    setEditingUserId(null); // 수정 완료 후 수정 모드 해제
   });
 
   const handleDeleteClick = () => {
@@ -90,17 +102,22 @@ const UserList = () => {
       <p className="text-sm text-gray-600 mb-4">{filteredUsers.length} users</p>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <UserTable
-        users={filteredUsers}
+        users={currentUsers}
         editingUserId={editingUserId}
         onEditClick={handleEditClick}
-        onInputChange={handleInputChange}
         onSaveClick={handleSaveClick}
         onDeleteClick={handleDeleteClick}
-        editedUserData={editedUserData}
-        errors={errors}
         register={register}
+        errors={errors}
         onSort={handleSort}
         sortConfig={sortConfig}
+        isValid={isValid}
+      />
+      <Pagination
+        usersPerPage={usersPerPage}
+        totalUsers={filteredUsers.length}
+        paginate={paginate}
+        currentPage={currentPage}
       />
     </div>
   );
