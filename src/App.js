@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import AddUserForm from './components/AddUserForm';
+import UserList from './components/UserList';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="container mx-auto p-12">
+      <header>
+        <h1 className='text-3xl font-black text-center'>Thyroscope Challenges</h1>
       </header>
+      
+      <main>
+        <section>
+          <h2 className='text-xl font-bold'>Add User</h2>
+          <AddUserForm />
+        </section>
+        
+        <section>
+          <h2 className='text-xl font-bold'>Users</h2>
+          <UserList />
+        </section>
+      </main>
     </div>
   );
 }
