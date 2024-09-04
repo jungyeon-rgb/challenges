@@ -140,14 +140,14 @@ const UserTable = ({
                 <td className="px-4 py-2 flex space-x-2">
                   <button
                     onClick={onSaveClick}
-                    className={`w-24 py-2 px-4 rounded focus:outline-none font-bold transition duration-300 ${
+                    className={`py-2 px-4 rounded focus:outline-none font-bold transition duration-300 ${
                       isValid
                         ? "bg-blue-500 hover:bg-blue-700 focus:bg-blue-600 text-white cursor-pointer"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-300 text-gray-500 cursor-pointer"
                     }`}
                     disabled={!isValid}
                   >
-                    추가
+                    수정
                   </button>
                   <button
                     onClick={onDeleteClick}
