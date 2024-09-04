@@ -85,17 +85,8 @@ const UserTable = ({
                     register={register}
                     required
                     validation={{
-                      minLength: {
-                        value: 3,
-                        message: "최소 3자 이상 입력하세요.",
-                      },
-                      maxLength: {
-                        value: 15,
-                        message: "최대 15자까지만 입력하세요.",
-                      },
                       pattern: {
                         value: /^[가-힣a-zA-Z\s\d]{3,15}$/,
-                        message: "유효하지 않은 형식입니다.",
                       },
                     }}
                     errors={errors}
@@ -111,7 +102,6 @@ const UserTable = ({
                     validation={{
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "유효하지 않은 이메일 형식입니다.",
                       },
                     }}
                     errors={errors}
@@ -125,17 +115,8 @@ const UserTable = ({
                     register={register}
                     required
                     validation={{
-                      minLength: {
-                        value: 3,
-                        message: "최소 3자 이상 입력하세요.",
-                      },
-                      maxLength: {
-                        value: 15,
-                        message: "최대 15자까지만 입력하세요.",
-                      },
                       pattern: {
                         value: /^[가-힣a-zA-Z\s\d]{3,15}$/,
-                        message: "유효하지 않은 형식입니다.",
                       },
                     }}
                     errors={errors}
@@ -166,13 +147,13 @@ const UserTable = ({
                     }`}
                     disabled={!isValid}
                   >
-                    Save
+                    추가
                   </button>
                   <button
                     onClick={onDeleteClick}
                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
                   >
-                    Delete
+                    삭제
                   </button>
                 </td>
               </>
