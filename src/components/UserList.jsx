@@ -63,8 +63,7 @@ const UserList = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold">Users</h2>
-      <p className="text-sm text-gray-600">{filteredUsers.length} users</p>
+      <p className="text-sm text-gray-600 mb-4">{filteredUsers.length} users</p>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <UserTable
         users={filteredUsers}
