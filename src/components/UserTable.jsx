@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const UserTable = ({ users }) => {
-  const [sortConfig, setSortConfig] = useState({ key: 'username', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({
+    key: "username",
+    direction: "ascending",
+  });
 
   const sortedUsers = [...users].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === 'ascending' ? -1 : 1;
+      return sortConfig.direction === "ascending" ? -1 : 1;
     }
     if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === 'ascending' ? 1 : -1;
+      return sortConfig.direction === "ascending" ? 1 : -1;
     }
     return 0;
   });
 
   const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
     }
     setSortConfig({ key, direction });
   };
@@ -25,10 +28,10 @@ const UserTable = ({ users }) => {
     <table>
       <thead>
         <tr>
-          <th onClick={() => requestSort('username')}>username</th>
-          <th onClick={() => requestSort('email')}>email</th>
-          <th onClick={() => requestSort('nickname')}>nickname</th>
-          <th onClick={() => requestSort('gender')}>gender</th>
+          <th onClick={() => requestSort("username")}>username</th>
+          <th onClick={() => requestSort("email")}>email</th>
+          <th onClick={() => requestSort("nickname")}>nickname</th>
+          <th onClick={() => requestSort("gender")}>gender</th>
         </tr>
       </thead>
       <tbody>

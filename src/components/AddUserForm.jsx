@@ -1,9 +1,11 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import useUserStore from "../store/userStore";
 
 const AddUserForm = () => {
-  const addUser = useUserStore((state) => state.addUser);
+  const { users, addUser } = useUserStore((state) => ({
+    users: state.users,
+    addUser: state.addUser,
+  }));
 
   const {
     register,
@@ -14,13 +16,19 @@ const AddUserForm = () => {
   });
 
   const onSubmit = (data) => {
+    const isEmailTaken = users.some((user) => user.email === data.email);
+
+    if (isEmailTaken) {
+      alert("이미 등록된 이메일이 존재합니다.");
+      return;
+    }
+
     addUser(data);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="flex space-x-4">
-        {/* Username Field */}
         <div className="flex-1">
           <label
             htmlFor="username"
@@ -42,6 +50,7 @@ const AddUserForm = () => {
             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
           />
         </div>
+
         <div className="flex-1">
           <label
             htmlFor="email"
@@ -61,6 +70,7 @@ const AddUserForm = () => {
             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
           />
         </div>
+
         <div className="flex-1">
           <label
             htmlFor="nickname"
@@ -82,6 +92,7 @@ const AddUserForm = () => {
             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
           />
         </div>
+
         <div className="flex-1">
           <label
             htmlFor="gender"
