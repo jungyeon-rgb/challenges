@@ -13,7 +13,7 @@ const UserTable = ({
   isValid,
 }) => {
   return (
-    <table className="min-w-full bg-white border mt-6">
+    <table className="min-w-full bg-white border my-6">
       <thead>
         <tr>
           <th className="px-4 py-2 text-left font-medium text-gray-600">

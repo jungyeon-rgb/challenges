@@ -54,7 +54,6 @@ const UserList = () => {
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // 페이지네이션 관련 로직
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -64,7 +63,7 @@ const UserList = () => {
   const handleEditClick = (user) => {
     if (editingUserId === user.email) {
       setEditingUserId(null);
-      reset(); // reset the form when cancelling edit
+      reset();
     } else {
       setEditingUserId(user.email);
       Object.keys(user).forEach((key) => setValue(key, user[key]));
@@ -72,12 +71,10 @@ const UserList = () => {
   };
 
   const handleSaveClick = handleSubmit((data) => {
-    // 유효성 검사 통과 확인
     if (!isValid) {
       return;
     }
 
-    // 이메일 중복 체크
     const isEmailTaken = users.some(
       (user) => user.email === data.email && user.email !== editingUserId
     );
@@ -87,9 +84,8 @@ const UserList = () => {
       return;
     }
 
-    // 유효성 검사 통과 후 데이터 업데이트
     updateUser(data, editingUserId);
-    setEditingUserId(null); // 수정 완료 후 수정 모드 해제
+    setEditingUserId(null);
   });
 
   const handleDeleteClick = () => {

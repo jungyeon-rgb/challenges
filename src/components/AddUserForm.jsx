@@ -40,8 +40,6 @@ const AddUserForm = () => {
           required
           errors={errors}
           validation={{
-            minLength: 3,
-            maxLength: 15,
             pattern: /^[가-힣a-zA-Z\s\d]{3,15}$/,
           }}
         />
@@ -66,8 +64,6 @@ const AddUserForm = () => {
           required
           errors={errors}
           validation={{
-            minLength: 3,
-            maxLength: 15,
             pattern: /^[가-힣a-zA-Z\s\d]{3,15}$/,
           }}
         />
