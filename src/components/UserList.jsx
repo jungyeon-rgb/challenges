@@ -61,12 +61,12 @@ const UserList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleEditClick = (user) => {
-    if (editingUserId === user.email) {
-      setEditingUserId(null);
-      reset();
-    } else {
+    if (user) {
       setEditingUserId(user.email);
       Object.keys(user).forEach((key) => setValue(key, user[key]));
+    } else {
+      setEditingUserId(null);
+      reset();
     }
   };
 
