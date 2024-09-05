@@ -5,7 +5,7 @@ const Search = ({ searchTerm, setSearchTerm }) => {
       placeholder="Search by username"
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
-      className="border-black border"
+      className="border-gray-300 border p-2"
     />
   );
 };

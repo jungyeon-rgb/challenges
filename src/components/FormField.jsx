@@ -1,5 +1,3 @@
-import React from "react";
-
 const FormField = ({
   label,
   id,
@@ -46,6 +44,9 @@ const FormField = ({
               : "border-gray-300"
           } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
         />
+      )}
+      {errors[id] && (
+        <p className="text-red-500 text-sm mt-1">{errors[id].message}</p>
       )}
     </div>
   );

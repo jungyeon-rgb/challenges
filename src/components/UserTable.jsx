@@ -4,17 +4,16 @@ const UserTable = ({
   users,
   editingUserId,
   onEditClick,
-  onInputChange,
   onSaveClick,
   onDeleteClick,
-  editedUserData,
   errors,
   register,
   onSort,
   sortConfig,
+  isValid,
 }) => {
   return (
-    <table className="min-w-full bg-white border mt-6">
+    <table className="min-w-full bg-white border my-6">
       <thead>
         <tr>
           <th className="px-4 py-2 text-left font-medium text-gray-600">
@@ -85,9 +84,12 @@ const UserTable = ({
                     type="text"
                     register={register}
                     required
+                    validation={{
+                      pattern: {
+                        value: /^[가-힣a-zA-Z\s\d]{3,15}$/,
+                      },
+                    }}
                     errors={errors}
-                    value={editedUserData.username}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
@@ -97,9 +99,12 @@ const UserTable = ({
                     type="email"
                     register={register}
                     required
+                    validation={{
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      },
+                    }}
                     errors={errors}
-                    value={editedUserData.email}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
@@ -109,9 +114,12 @@ const UserTable = ({
                     type="text"
                     register={register}
                     required
+                    validation={{
+                      pattern: {
+                        value: /^[가-힣a-zA-Z\s\d]{3,15}$/,
+                      },
+                    }}
                     errors={errors}
-                    value={editedUserData.nickname}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
@@ -126,23 +134,26 @@ const UserTable = ({
                       { value: "male", label: "Male" },
                       { value: "female", label: "Female" },
                     ]}
-                    value={editedUserData.gender}
-                    onChange={onInputChange}
                     hideLabel={true}
                   />
                 </td>
                 <td className="px-4 py-2 flex space-x-2">
                   <button
                     onClick={onSaveClick}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                    className={`py-2 px-4 rounded focus:outline-none font-bold transition duration-300 ${
+                      isValid
+                        ? "bg-blue-500 hover:bg-blue-700 focus:bg-blue-600 text-white cursor-pointer"
+                        : "bg-gray-300 text-gray-500 cursor-pointer"
+                    }`}
+                    disabled={!isValid}
                   >
-                    Save
+                    수정
                   </button>
                   <button
                     onClick={onDeleteClick}
                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
                   >
-                    Delete
+                    삭제
                   </button>
                 </td>
               </>

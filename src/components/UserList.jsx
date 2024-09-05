@@ -3,23 +3,31 @@ import useUserStore from "../store/userStore";
 import UserTable from "./UserTable";
 import Search from "./Search";
 import { useForm } from "react-hook-form";
+import Pagination from "./Pagination";
 
 const UserList = () => {
-  const { users, updateUser, deleteUser } = useUserStore();
+  const { users, updateUser, deleteUser } = useUserStore((state) => ({
+    users: state.users,
+    updateUser: state.updateUser,
+    deleteUser: state.deleteUser,
+  }));
+
   const [searchTerm, setSearchTerm] = useState("");
   const [editingUserId, setEditingUserId] = useState(null);
-  const [editedUserData, setEditedUserData] = useState({});
-  const [originalEmail, setOriginalEmail] = useState("");
   const [sortConfig, setSortConfig] = useState({
     key: "username",
     direction: "ascending",
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
+
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
+    reset,
   } = useForm({
     mode: "onChange",
   });
@@ -46,27 +54,29 @@ const UserList = () => {
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const handleEditClick = (user) => {
     if (editingUserId === user.email) {
       setEditingUserId(null);
-      setEditedUserData({});
+      reset();
     } else {
       setEditingUserId(user.email);
-      setOriginalEmail(user.email);
-      setEditedUserData(user);
       Object.keys(user).forEach((key) => setValue(key, user[key]));
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedUserData({ ...editedUserData, [name]: value });
-  };
+  const handleSaveClick = handleSubmit((data) => {
+    if (!isValid) {
+      return;
+    }
 
-  const handleSaveClick = handleSubmit(() => {
     const isEmailTaken = users.some(
-      (user) =>
-        user.email === editedUserData.email && user.email !== originalEmail
+      (user) => user.email === data.email && user.email !== editingUserId
     );
 
     if (isEmailTaken) {
@@ -74,10 +84,8 @@ const UserList = () => {
       return;
     }
 
-    if (Object.keys(errors).length === 0) {
-      updateUser(editedUserData, originalEmail);
-      setEditingUserId(null);
-    }
+    updateUser(data, editingUserId);
+    setEditingUserId(null);
   });
 
   const handleDeleteClick = () => {
@@ -90,17 +98,22 @@ const UserList = () => {
       <p className="text-sm text-gray-600 mb-4">{filteredUsers.length} users</p>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <UserTable
-        users={filteredUsers}
+        users={currentUsers}
         editingUserId={editingUserId}
         onEditClick={handleEditClick}
-        onInputChange={handleInputChange}
         onSaveClick={handleSaveClick}
         onDeleteClick={handleDeleteClick}
-        editedUserData={editedUserData}
-        errors={errors}
         register={register}
+        errors={errors}
         onSort={handleSort}
         sortConfig={sortConfig}
+        isValid={isValid}
+      />
+      <Pagination
+        usersPerPage={usersPerPage}
+        totalUsers={filteredUsers.length}
+        paginate={paginate}
+        currentPage={currentPage}
       />
     </div>
   );

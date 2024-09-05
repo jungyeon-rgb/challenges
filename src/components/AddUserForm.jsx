@@ -40,8 +40,6 @@ const AddUserForm = () => {
           required
           errors={errors}
           validation={{
-            minLength: 3,
-            maxLength: 15,
             pattern: /^[가-힣a-zA-Z\s\d]{3,15}$/,
           }}
         />
@@ -66,8 +64,6 @@ const AddUserForm = () => {
           required
           errors={errors}
           validation={{
-            minLength: 3,
-            maxLength: 15,
             pattern: /^[가-힣a-zA-Z\s\d]{3,15}$/,
           }}
         />
@@ -92,7 +88,7 @@ const AddUserForm = () => {
           className={`w-24 py-2 px-4 rounded focus:outline-none font-bold transition duration-300 ${
             isValid
               ? "bg-blue-500 hover:bg-blue-700 focus:bg-blue-600 text-white cursor-pointer"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-gray-300 text-gray-500 cursor-pointer"
           }`}
           disabled={!isValid}
         >
